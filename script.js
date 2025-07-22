@@ -14,7 +14,6 @@ const loseSound = document.getElementById("lose-sound");
 const tieSound = document.getElementById("tie-sound");
 
 const chartCtx = document.getElementById("result-chart").getContext("2d");
-const roundHistory = [];
 
 let chart = new Chart(chartCtx, {
   type: 'line',
@@ -115,3 +114,24 @@ function restartGame() {
   chart.data.datasets.forEach(ds => ds.data = []);
   chart.update();
 }
+
+// Dark mode toggle + persistence
+const themeSwitch = document.getElementById("theme-switch");
+
+themeSwitch.addEventListener("change", () => {
+  if (themeSwitch.checked) {
+    document.body.classList.add("dark-mode");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.body.classList.remove("dark-mode");
+    localStorage.setItem("theme", "light");
+  }
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    themeSwitch.checked = true;
+  }
+});
