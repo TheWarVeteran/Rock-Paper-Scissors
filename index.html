@@ -4,31 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rock Paper Scissors</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
+  <div class="container glass">
     <h1>Rock Paper Scissors</h1>
-    <div class="controls">
-      <label for="rounds">Rounds:</label>
-      <select id="rounds">
-        <option value="5">Best of 5</option>
-        <option value="10">Best of 10</option>
-      </select>
 
-      <label class="toggle">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider"></span>
-        🌙
-      </label>
-    </div>
+    <label for="rounds">Select Rounds:</label>
+    <select id="rounds">
+      <option value="5">Best of 5</option>
+      <option value="10">Best of 10</option>
+    </select>
 
-    <div class="scoreboard">
-      <p>Player: <span id="player-score">0</span></p>
-      <p>Computer: <span id="computer-score">0</span></p>
-    </div>
+    <label for="theme-toggle">🌗 Dark Mode</label>
+    <input type="checkbox" id="theme-toggle"/>
 
     <div class="buttons">
       <button onclick="playRound('rock')">✊ Rock</button>
@@ -36,17 +26,35 @@
       <button onclick="playRound('scissors')">✌️ Scissors</button>
     </div>
 
+    <div class="choices-display">
+      <div class="choice-side">
+        <h3>You Chose</h3>
+        <img id="player-choice-img" src="assets/placeholder.png" alt="Your Choice" class="choice-img"/>
+      </div>
+      <div class="choice-side">
+        <h3>Computer Chose</h3>
+        <img id="computer-choice-img" src="assets/placeholder.png" alt="Computer Choice" class="choice-img"/>
+      </div>
+    </div>
+
+    <div class="scoreboard">
+      <p>Player: <span id="player-score">0</span></p>
+      <p>Computer: <span id="computer-score">0</span></p>
+      <p>Ties: <span id="tie-score">0</span></p>
+    </div>
+
     <p id="result"></p>
     <p id="final-result"></p>
 
-    <canvas id="scoreChart"></canvas>
+    <canvas id="scoreChart" width="300" height="150"></canvas>
 
-    <button id="reset" onclick="resetGame()">Reset Game</button>
-
-    <audio id="win-sound" src="sounds/win.wav"></audio>
-    <audio id="lose-sound" src="sounds/lose.wav"></audio>
-    <audio id="tie-sound" src="sounds/tie.wav"></audio>
+    <button onclick="resetGame()">🔄 Reset Game</button>
   </div>
+
+  <audio id="win-sound" src="assets/win.wav"></audio>
+  <audio id="lose-sound" src="assets/lose.wav"></audio>
+  <audio id="tie-sound" src="assets/tie.wav"></audio>
+
   <script src="script.js"></script>
 </body>
 </html>

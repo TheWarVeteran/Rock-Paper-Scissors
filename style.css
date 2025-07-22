@@ -1,119 +1,67 @@
 body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom right, #a1c4fd, #c2e9fb);
   margin: 0;
-  font-family: 'Orbitron', sans-serif;
-  background: #cde7ff;
-  transition: background 0.5s ease;
+  padding: 0;
   color: #333;
+  transition: background 0.5s ease;
 }
 
-body.dark-mode {
-  background: #121212;
-  color: #f1f1f1;
+.dark-mode {
+  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+  color: #fff;
 }
 
 .container {
   max-width: 600px;
-  margin: 40px auto;
-  padding: 30px;
+  margin: 2rem auto;
+  padding: 2rem;
   border-radius: 20px;
-  backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
-h1 {
-  margin-bottom: 20px;
-}
-
-.controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.toggle {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 25px;
-}
-
-.toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  top: 0; left: 0;
-  right: 0; bottom: 0;
-  background-color: #ccc;
-  border-radius: 25px;
-  transition: 0.4s;
-}
-
-.slider:before {
-  content: "";
-  position: absolute;
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 3.5px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:checked + .slider:before {
-  transform: translateX(24px);
+.glass {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .buttons button {
-  padding: 12px 20px;
-  margin: 10px;
-  font-size: 18px;
+  padding: 1rem 2rem;
+  margin: 0.5rem;
+  font-size: 1.2rem;
   border: none;
-  border-radius: 12px;
-  background-color: #2196F3;
-  color: white;
+  border-radius: 10px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s, background 0.3s;
 }
 
 .buttons button:hover {
   transform: scale(1.1);
-  background-color: #0b7dda;
+  background: rgba(255, 255, 255, 0.3);
 }
 
-#result, #final-result {
-  font-size: 18px;
-  margin-top: 15px;
+.scoreboard {
+  margin-top: 1rem;
 }
 
-canvas {
-  margin-top: 30px;
-  max-width: 100%;
-  height: 200px;
+.choices-display {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
 }
 
-#reset {
-  margin-top: 20px;
-  padding: 10px 16px;
-  background-color: crimson;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
+.choice-side {
+  text-align: center;
 }
 
-#reset:hover {
-  background-color: darkred;
+.choice-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
 }
