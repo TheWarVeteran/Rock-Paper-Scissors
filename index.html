@@ -2,40 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rock Paper Scissors</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="toggle-theme">
-    <label class="switch">
-      <input type="checkbox" id="darkModeToggle">
-      <span class="slider"></span>
-    </label>
-    <span>Dark Mode</span>
-  </div>
-
   <div class="container">
     <h1>Rock Paper Scissors</h1>
+    <div class="controls">
+      <label for="rounds">Rounds:</label>
+      <select id="rounds">
+        <option value="5">Best of 5</option>
+        <option value="10">Best of 10</option>
+      </select>
+
+      <label class="toggle">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+        🌙
+      </label>
+    </div>
+
     <div class="scoreboard">
-      <div>Player: <span id="player-score">0</span></div>
-      <div>Computer: <span id="computer-score">0</span></div>
+      <p>Player: <span id="player-score">0</span></p>
+      <p>Computer: <span id="computer-score">0</span></p>
     </div>
-    <div class="choices">
-      <button onclick="play('rock')">🪨 Rock</button>
-      <button onclick="play('paper')">📄 Paper</button>
-      <button onclick="play('scissors')">✂️ Scissors</button>
+
+    <div class="buttons">
+      <button onclick="playRound('rock')">✊ Rock</button>
+      <button onclick="playRound('paper')">✋ Paper</button>
+      <button onclick="playRound('scissors')">✌️ Scissors</button>
     </div>
-    <div class="result" id="result"></div>
-    <div id="final-result" class="final-result"></div>
+
+    <p id="result"></p>
+    <p id="final-result"></p>
+
+    <canvas id="scoreChart"></canvas>
+
+    <button id="reset" onclick="resetGame()">Reset Game</button>
+
+    <audio id="win-sound" src="sounds/win.wav"></audio>
+    <audio id="lose-sound" src="sounds/lose.wav"></audio>
+    <audio id="tie-sound" src="sounds/tie.wav"></audio>
   </div>
-
-  <audio id="win-sound" src="sounds/win.wav"></audio>
-  <audio id="lose-sound" src="sounds/lose.wav"></audio>
-  <audio id="tie-sound" src="sounds/tie.wav"></audio>
-
   <script src="script.js"></script>
 </body>
 </html>
-
-

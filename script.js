@@ -1,92 +1,120 @@
 let playerScore = 0;
 let computerScore = 0;
-let roundsPlayed = 0;
-let totalRounds = 5;
-let wins = 0, losses = 0, ties = 0;
+let roundCount = 0;
+let maxRounds = 5;
 
-// Sound elements
-const winSound = document.getElementById('win-sound');
-const loseSound = document.getElementById('lose-sound');
-const tieSound = document.getElementById('tie-sound');
+const playerScoreSpan = document.getElementById("player-score");
+const computerScoreSpan = document.getElementById("computer-score");
+const resultDiv = document.getElementById("result");
+const finalResultDiv = document.getElementById("final-result");
+const roundsSelect = document.getElementById("rounds");
+const themeToggle = document.getElementById("theme-toggle");
 
-const resultEl = document.getElementById("result");
-const finalResultEl = document.getElementById("final-result");
-const playerScoreEl = document.getElementById("player-score");
-const computerScoreEl = document.getElementById("computer-score");
+const winSound = document.getElementById("win-sound");
+const loseSound = document.getElementById("lose-sound");
+const tieSound = document.getElementById("tie-sound");
 
-const ctx = document.getElementById('scoreChart').getContext('2d');
-const scoreChart = new Chart(ctx, {
-  type: 'bar',
+const scoreChartCtx = document.getElementById("scoreChart").getContext("2d");
+let scoreChart = new Chart(scoreChartCtx, {
+  type: "line",
   data: {
-    labels: ['Wins', 'Losses', 'Ties'],
-    datasets: [{
-      label: 'Game Stats',
-      data: [wins, losses, ties],
-      backgroundColor: ['#06d6a0', '#ef476f', '#ffd166']
-    }]
+    labels: [],
+    datasets: [
+      {
+        label: "Player",
+        data: [],
+        borderColor: "#4CAF50",
+        fill: false,
+      },
+      {
+        label: "Computer",
+        data: [],
+        borderColor: "#F44336",
+        fill: false,
+      }
+    ]
   },
   options: {
     responsive: true,
-    scales: {
-      y: { beginAtZero: true }
+    plugins: {
+      legend: { position: "top" },
+      title: { display: true, text: "Score Progression" }
     }
   }
 });
 
+roundsSelect.addEventListener("change", () => {
+  maxRounds = parseInt(roundsSelect.value);
+  resetGame();
+});
+
+themeToggle.addEventListener("change", () => {
+  document.body.classList.toggle("dark-mode");
+});
+
 function getComputerChoice() {
-  const choices = ['rock', 'paper', 'scissors'];
+  const choices = ["rock", "paper", "scissors"];
   return choices[Math.floor(Math.random() * 3)];
 }
 
-function updateChart() {
-  scoreChart.data.datasets[0].data = [wins, losses, ties];
-  scoreChart.update();
-}
-
 function playRound(playerChoice) {
-  if (roundsPlayed >= totalRounds) return;
+  if (roundCount >= maxRounds) return;
 
   const computerChoice = getComputerChoice();
   let result = "";
 
   if (playerChoice === computerChoice) {
     result = "It's a tie!";
-    ties++;
     tieSound.play();
   } else if (
-    (playerChoice === 'rock' && computerChoice === 'scissors') ||
-    (playerChoice === 'paper' && computerChoice === 'rock') ||
-    (playerChoice === 'scissors' && computerChoice === 'paper')
+    (playerChoice === "rock" && computerChoice === "scissors") ||
+    (playerChoice === "scissors" && computerChoice === "paper") ||
+    (playerChoice === "paper" && computerChoice === "rock")
   ) {
-    result = "You win!";
     playerScore++;
-    wins++;
+    result = `You win! ${playerChoice} beats ${computerChoice}`;
     winSound.play();
   } else {
-    result = "You lose!";
     computerScore++;
-    losses++;
+    result = `You lose! ${computerChoice} beats ${playerChoice}`;
     loseSound.play();
   }
 
-  roundsPlayed++;
-  resultEl.textContent = result;
-  playerScoreEl.textContent = playerScore;
-  computerScoreEl.textContent = computerScore;
-  updateChart();
+  roundCount++;
+  playerScoreSpan.textContent = playerScore;
+  computerScoreSpan.textContent = computerScore;
+  resultDiv.textContent = result;
 
-  if (roundsPlayed === totalRounds) {
-    if (playerScore > computerScore) {
-      finalResultEl.textContent = "🎉 You are the overall winner!";
-    } else if (playerScore < computerScore) {
-      finalResultEl.textContent = "💻 The computer wins overall!";
-    } else {
-      finalResultEl.textContent = "😐 It's an overall tie!";
-    }
+  scoreChart.data.labels.push(`R${roundCount}`);
+  scoreChart.data.datasets[0].data.push(playerScore);
+  scoreChart.data.datasets[1].data.push(computerScore);
+  scoreChart.update();
+
+  if (roundCount === maxRounds) {
+    declareFinalResult();
   }
 }
 
-// Dark Mode Toggle
-document.getElementById("darkModeToggle").addEventListener("change", function() {
-  document.body.classList.toggle("dark", this.checked);
-});
+function declareFinalResult() {
+  if (playerScore > computerScore) {
+    finalResultDiv.textContent = "🎉 You are the overall winner!";
+  } else if (playerScore < computerScore) {
+    finalResultDiv.textContent = "😞 Computer wins the game.";
+  } else {
+    finalResultDiv.textContent = "🤝 It's a tie overall.";
+  }
+}
+
+function resetGame() {
+  playerScore = 0;
+  computerScore = 0;
+  roundCount = 0;
+  finalResultDiv.textContent = "";
+  resultDiv.textContent = "";
+  playerScoreSpan.textContent = "0";
+  computerScoreSpan.textContent = "0";
+  scoreChart.data.labels = [];
+  scoreChart.data.datasets[0].data = [];
+  scoreChart.data.datasets[1].data = [];
+  scoreChart.update();
+}
