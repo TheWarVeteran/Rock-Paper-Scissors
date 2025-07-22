@@ -1,70 +1,92 @@
 let playerScore = 0;
 let computerScore = 0;
-const maxRounds = 5;
 let roundsPlayed = 0;
+let totalRounds = 5;
+let wins = 0, losses = 0, ties = 0;
 
-const resultDiv = document.getElementById("result");
-const finalResultDiv = document.getElementById("final-result");
-const playerScoreSpan = document.getElementById("player-score");
-const computerScoreSpan = document.getElementById("computer-score");
+// Sound elements
+const winSound = document.getElementById('win-sound');
+const loseSound = document.getElementById('lose-sound');
+const tieSound = document.getElementById('tie-sound');
 
-const winSound = document.getElementById("win-sound");
-const loseSound = document.getElementById("lose-sound");
-const tieSound = document.getElementById("tie-sound");
+const resultEl = document.getElementById("result");
+const finalResultEl = document.getElementById("final-result");
+const playerScoreEl = document.getElementById("player-score");
+const computerScoreEl = document.getElementById("computer-score");
 
-const darkToggle = document.getElementById("darkModeToggle");
-darkToggle.addEventListener("change", () => {
-  document.body.classList.toggle("dark-mode");
+const ctx = document.getElementById('scoreChart').getContext('2d');
+const scoreChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Wins', 'Losses', 'Ties'],
+    datasets: [{
+      label: 'Game Stats',
+      data: [wins, losses, ties],
+      backgroundColor: ['#06d6a0', '#ef476f', '#ffd166']
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
 });
 
-function play(playerChoice) {
-  if (roundsPlayed >= maxRounds) return;
+function getComputerChoice() {
+  const choices = ['rock', 'paper', 'scissors'];
+  return choices[Math.floor(Math.random() * 3)];
+}
 
-  const choices = ["rock", "paper", "scissors"];
-  const computerChoice = choices[Math.floor(Math.random() * 3)];
+function updateChart() {
+  scoreChart.data.datasets[0].data = [wins, losses, ties];
+  scoreChart.update();
+}
 
-  const outcome = getResult(playerChoice, computerChoice);
-  roundsPlayed++;
+function playRound(playerChoice) {
+  if (roundsPlayed >= totalRounds) return;
 
-  if (outcome === "win") {
-    playerScore++;
-    resultDiv.textContent = `You Win! ${playerChoice} beats ${computerChoice}`;
-    winSound.play();
-  } else if (outcome === "lose") {
-    computerScore++;
-    resultDiv.textContent = `You Lose! ${computerChoice} beats ${playerChoice}`;
-    loseSound.play();
-  } else {
-    resultDiv.textContent = `It's a Tie! You both chose ${playerChoice}`;
+  const computerChoice = getComputerChoice();
+  let result = "";
+
+  if (playerChoice === computerChoice) {
+    result = "It's a tie!";
+    ties++;
     tieSound.play();
-  }
-
-  playerScoreSpan.textContent = playerScore;
-  computerScoreSpan.textContent = computerScore;
-
-  if (roundsPlayed === maxRounds) {
-    declareWinner();
-  }
-}
-
-function getResult(player, computer) {
-  if (player === computer) return "tie";
-  if (
-    (player === "rock" && computer === "scissors") ||
-    (player === "scissors" && computer === "paper") ||
-    (player === "paper" && computer === "rock")
+  } else if (
+    (playerChoice === 'rock' && computerChoice === 'scissors') ||
+    (playerChoice === 'paper' && computerChoice === 'rock') ||
+    (playerChoice === 'scissors' && computerChoice === 'paper')
   ) {
-    return "win";
+    result = "You win!";
+    playerScore++;
+    wins++;
+    winSound.play();
+  } else {
+    result = "You lose!";
+    computerScore++;
+    losses++;
+    loseSound.play();
   }
-  return "lose";
+
+  roundsPlayed++;
+  resultEl.textContent = result;
+  playerScoreEl.textContent = playerScore;
+  computerScoreEl.textContent = computerScore;
+  updateChart();
+
+  if (roundsPlayed === totalRounds) {
+    if (playerScore > computerScore) {
+      finalResultEl.textContent = "🎉 You are the overall winner!";
+    } else if (playerScore < computerScore) {
+      finalResultEl.textContent = "💻 The computer wins overall!";
+    } else {
+      finalResultEl.textContent = "😐 It's an overall tie!";
+    }
+  }
 }
 
-function declareWinner() {
-  if (playerScore > computerScore) {
-    finalResultDiv.textContent = "🎉 You are the overall winner!";
-  } else if (computerScore > playerScore) {
-    finalResultDiv.textContent = "😢 Computer wins overall!";
-  } else {
-    finalResultDiv.textContent = "🤝 It's a draw overall!";
-  }
-}
+// Dark Mode Toggle
+document.getElementById("darkModeToggle").addEventListener("change", function() {
+  document.body.classList.toggle("dark", this.checked);
+});

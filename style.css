@@ -1,70 +1,87 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
 body {
   margin: 0;
-  padding: 0;
   font-family: 'Orbitron', sans-serif;
-  background: linear-gradient(135deg, #1e1e2f, #3a3a5f);
-  color: #fff;
-  transition: background 0.3s, color 0.3s;
+  background: linear-gradient(135deg, #c6f0ff, #d6eaff);
+  color: #222;
+  transition: background 0.5s, color 0.5s;
 }
 
-.dark-mode {
-  background: linear-gradient(135deg, #000000, #2a2a2a);
-  color: #f5f5f5;
-}
-
-h1 {
-  text-align: center;
-  margin-top: 30px;
-  font-size: 2.5rem;
+body.dark {
+  background: #1f1f1f;
+  color: #f1f1f1;
 }
 
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  background: rgba(255, 255, 255, 0.1);
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 2rem;
   border-radius: 20px;
-  padding: 30px;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   text-align: center;
 }
 
+h1 {
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.scoreboard {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-around;
+}
+
 .choices button {
-  padding: 15px 25px;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  padding: 12px 20px;
   margin: 10px;
-  border: none;
   border-radius: 12px;
-  background: #4d4dff;
-  color: white;
+  border: none;
+  background: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
+  transition: transform 0.2s ease, background 0.3s;
 }
 
 .choices button:hover {
-  background: #6f6fff;
-  transform: scale(1.05);
+  transform: scale(1.1);
+  background: #90e0ef;
 }
 
-.scoreboard, .result, .final-result {
+.result {
   margin-top: 20px;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.final-result {
+  margin-top: 20px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #0077b6;
 }
 
 .toggle-theme {
   position: absolute;
-  top: 20px;
+  top: 10px;
   right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
 }
 
+/* Toggle switch styling */
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 20px;
-  margin-right: 10px;
+  width: 42px;
+  height: 24px;
 }
 
 .switch input {
@@ -76,34 +93,26 @@ h1 {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0;
-  right: 0; bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 20px;
+  transition: .4s;
+  border-radius: 34px;
 }
 
 .slider:before {
   position: absolute;
   content: "";
   height: 16px; width: 16px;
-  left: 2px; bottom: 2px;
+  left: 4px; bottom: 4px;
   background-color: white;
-  transition: 0.4s;
+  transition: .4s;
   border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: #2196F3;
 }
 
 input:checked + .slider:before {
-  transform: translateX(20px);
-}
-
-@media (max-width: 600px) {
-  .choices button {
-    width: 100%;
-    margin: 10px 0;
-  }
+  transform: translateX(18px);
 }
