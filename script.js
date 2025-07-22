@@ -82,3 +82,4 @@ canvas#scoreChart {
   margin: 40px auto;
   display: block;
 }
+
