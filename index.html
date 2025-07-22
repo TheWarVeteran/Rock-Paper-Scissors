@@ -2,44 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rock Paper Scissors</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="theme-toggle">
-      <label class="switch">
-        <input type="checkbox" id="theme-switch">
-        <span class="slider round"></span>
-      </label>
-      <span>Dark Mode</span>
-    </div>
+  <div class="round-selector">
+    <label for="rounds-input">Number of Rounds:</label>
+    <input type="number" id="rounds-input" min="1" max="20" value="5" />
+    <button id="start-game-btn">Start Game</button>
+    <input type="color" id="bg-color" title="Pick background color" />
+  </div>
 
-    <h1>Rock, Paper, Scissors</h1>
-
+  <div id="game-area" style="display: none;">
     <div class="scoreboard">
       <p>Player: <span id="player-score">0</span></p>
       <p>Computer: <span id="computer-score">0</span></p>
-      <p>Round: <span id="round-number">1</span> / 5</p>
     </div>
-
     <div class="choices">
-      <button class="choice-btn" onclick="play('rock')">🪨 Rock</button>
-      <button class="choice-btn" onclick="play('paper')">📄 Paper</button>
-      <button class="choice-btn" onclick="play('scissors')">✂️ Scissors</button>
+      <button onclick="playRound('rock')">Rock</button>
+      <button onclick="playRound('paper')">Paper</button>
+      <button onclick="playRound('scissors')">Scissors</button>
     </div>
-
-    <div class="result">
-      <p id="round-result">Make your move!</p>
-      <p id="final-message"></p>
-    </div>
-
-    <canvas id="result-chart" width="400" height="200"></canvas>
-
-    <button id="restart-btn" onclick="restartGame()">🔁 Restart Game</button>
+    <p id="round-result"></p>
+    <p id="final-message"></p>
+    <button id="restart-btn" onclick="restartGame()" style="display:none;">Restart</button>
   </div>
 
   <audio id="win-sound" src="sounds/win.wav"></audio>

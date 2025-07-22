@@ -1,137 +1,103 @@
 let playerScore = 0;
 let computerScore = 0;
-let round = 1;
-const maxRounds = 5;
+let round = 0;
+let totalRounds = 5;
 
-const roundResultText = document.getElementById("round-result");
+const playerScoreDisplay = document.getElementById("player-score");
+const computerScoreDisplay = document.getElementById("computer-score");
+const roundResult = document.getElementById("round-result");
 const finalMessage = document.getElementById("final-message");
-const playerScoreText = document.getElementById("player-score");
-const computerScoreText = document.getElementById("computer-score");
-const roundNumberText = document.getElementById("round-number");
+const restartBtn = document.getElementById("restart-btn");
+const gameArea = document.getElementById("game-area");
+const startGameBtn = document.getElementById("start-game-btn");
+const roundsInput = document.getElementById("rounds-input");
+const bgColorPicker = document.getElementById("bg-color");
 
 const winSound = document.getElementById("win-sound");
 const loseSound = document.getElementById("lose-sound");
 const tieSound = document.getElementById("tie-sound");
 
-const chartCtx = document.getElementById("result-chart").getContext("2d");
-
-let chart = new Chart(chartCtx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [
-      {
-        label: 'Player Score',
-        data: [],
-        borderColor: '#4CAF50',
-        fill: false
-      },
-      {
-        label: 'Computer Score',
-        data: [],
-        borderColor: '#F44336',
-        fill: false
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: true }
-    },
-    scales: {
-      y: { beginAtZero: true }
-    }
+startGameBtn.addEventListener("click", () => {
+  totalRounds = parseInt(roundsInput.value);
+  if (isNaN(totalRounds) || totalRounds < 1) {
+    totalRounds = 5;
   }
+  resetGame();
+  gameArea.style.display = "block";
 });
 
-function play(playerChoice) {
-  if (round > maxRounds) return;
+bgColorPicker.addEventListener("input", (e) => {
+  document.body.style.backgroundColor = e.target.value;
+});
 
-  const choices = ['rock', 'paper', 'scissors'];
-  const computerChoice = choices[Math.floor(Math.random() * 3)];
+function getComputerChoice() {
+  const choices = ["rock", "paper", "scissors"];
+  const randomIndex = Math.floor(Math.random() * choices.length);
+  return choices[randomIndex];
+}
 
-  let resultText = "";
-
-  if (playerChoice === computerChoice) {
-    resultText = `It's a tie! Both chose ${playerChoice}.`;
-    tieSound.play();
-  } else if (
-    (playerChoice === 'rock' && computerChoice === 'scissors') ||
-    (playerChoice === 'paper' && computerChoice === 'rock') ||
-    (playerChoice === 'scissors' && computerChoice === 'paper')
+function getResult(player, computer) {
+  if (player === computer) return "tie";
+  if (
+    (player === "rock" && computer === "scissors") ||
+    (player === "scissors" && computer === "paper") ||
+    (player === "paper" && computer === "rock")
   ) {
-    playerScore++;
-    resultText = `You win! ${playerChoice} beats ${computerChoice}.`;
-    winSound.play();
+    return "win";
   } else {
-    computerScore++;
-    resultText = `You lose! ${computerChoice} beats ${playerChoice}.`;
+    return "lose";
+  }
+}
+
+function playRound(playerChoice) {
+  const computerChoice = getComputerChoice();
+  const result = getResult(playerChoice, computerChoice);
+
+  if (result === "win") {
+    winSound.play();
+    playerScore++;
+  } else if (result === "lose") {
     loseSound.play();
+    computerScore++;
+  } else {
+    tieSound.play();
   }
 
-  playerScoreText.textContent = playerScore;
-  computerScoreText.textContent = computerScore;
-  roundNumberText.textContent = round;
-  roundResultText.textContent = resultText;
-
-  updateChart(round, playerScore, computerScore);
   round++;
 
-  if (round > maxRounds) {
+  playerScoreDisplay.textContent = playerScore;
+  computerScoreDisplay.textContent = computerScore;
+  roundResult.textContent = `You chose ${playerChoice}, Computer chose ${computerChoice}. You ${result}.`;
+
+  if (round >= totalRounds) {
     endGame();
   }
 }
 
-function updateChart(roundNumber, player, computer) {
-  chart.data.labels.push(`Round ${roundNumber}`);
-  chart.data.datasets[0].data.push(player);
-  chart.data.datasets[1].data.push(computer);
-  chart.update();
+function endGame() {
+  let message;
+  if (playerScore > computerScore) {
+    message = "🎉 You won the game!";
+  } else if (playerScore < computerScore) {
+    message = "💀 You lost the game.";
+  } else {
+    message = "🤝 It's a tie!";
+  }
+  finalMessage.textContent = message;
+  restartBtn.style.display = "inline-block";
 }
 
-function endGame() {
-  if (playerScore > computerScore) {
-    finalMessage.textContent = "🎉 You are the overall winner!";
-  } else if (playerScore < computerScore) {
-    finalMessage.textContent = "💻 Computer wins the game!";
-  } else {
-    finalMessage.textContent = "🤝 It's a draw!";
-  }
+function resetGame() {
+  playerScore = 0;
+  computerScore = 0;
+  round = 0;
+  playerScoreDisplay.textContent = 0;
+  computerScoreDisplay.textContent = 0;
+  roundResult.textContent = "";
+  finalMessage.textContent = "";
+  restartBtn.style.display = "none";
 }
 
 function restartGame() {
-  playerScore = 0;
-  computerScore = 0;
-  round = 1;
-  playerScoreText.textContent = 0;
-  computerScoreText.textContent = 0;
-  roundNumberText.textContent = 1;
-  roundResultText.textContent = "Make your move!";
-  finalMessage.textContent = "";
-
-  chart.data.labels = [];
-  chart.data.datasets.forEach(ds => ds.data = []);
-  chart.update();
+  resetGame();
 }
-
-// Dark mode toggle + persistence
-const themeSwitch = document.getElementById("theme-switch");
-
-themeSwitch.addEventListener("change", () => {
-  if (themeSwitch.checked) {
-    document.body.classList.add("dark-mode");
-    localStorage.setItem("theme", "dark");
-  } else {
-    document.body.classList.remove("dark-mode");
-    localStorage.setItem("theme", "light");
-  }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-    themeSwitch.checked = true;
-  }
-});

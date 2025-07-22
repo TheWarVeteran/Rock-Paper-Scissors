@@ -1,186 +1,70 @@
-/* Root theme variables */
-:root {
-  --bg-gradient: linear-gradient(135deg, #4facfe, #00f2fe);
-  --container-bg: rgba(255, 255, 255, 0.1);
-  --text-color: white;
-  --button-bg: white;
-  --button-text: #333;
-  --restart-bg: #ff4b5c;
-  --restart-hover: #ff2e3b;
-  --chart-bg: rgba(255, 255, 255, 0.15);
-}
-
-body.dark-mode {
-  --bg-gradient: linear-gradient(135deg, #1f1f1f, #2b2b2b);
-  --container-bg: rgba(0, 0, 0, 0.5);
-  --text-color: #eee;
-  --button-bg: #333;
-  --button-text: white;
-  --restart-bg: #222;
-  --restart-hover: #111;
-  --chart-bg: rgba(0, 0, 0, 0.2);
-}
-
-/* Base */
-* {
-  box-sizing: border-box;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
   margin: 0;
   padding: 0;
+  background-color: #f4f4f4;
+  transition: background-color 0.3s ease;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg-gradient);
-  min-height: 100vh;
+.round-selector {
+  padding: 20px;
+  background-color: #333;
+  color: white;
   display: flex;
   justify-content: center;
+  gap: 10px;
   align-items: center;
-  padding: 2rem;
-  color: var(--text-color);
+  flex-wrap: wrap;
 }
 
-.container {
-  background: var(--container-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  text-align: center;
+.scoreboard {
+  margin-top: 20px;
+  font-size: 1.2em;
 }
 
-/* Theme toggle */
-.theme-toggle {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 34px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:checked + .slider:before {
-  transform: translateX(24px);
-}
-
-/* Headings */
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-  text-shadow: 1px 1px 4px #000;
-}
-
-.scoreboard p {
-  font-size: 1.1rem;
-  margin: 0.4rem;
-}
-
-.choices {
-  margin: 1.5rem 0;
-}
-
-.choice-btn {
-  background: var(--button-bg);
-  color: var(--button-text);
+.choices button {
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 1em;
+  border-radius: 10px;
   border: none;
-  border-radius: 50px;
-  padding: 1rem 1.8rem;
-  margin: 0.5rem;
-  font-size: 1.3rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+  background-color: #4CAF50;
+  color: white;
 }
 
-.choice-btn:hover {
-  background: #e0e0e0;
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+.choices button:hover {
+  transform: scale(1.05);
+  background-color: #45a049;
 }
 
-.result {
-  margin-top: 1rem;
-}
-
-#round-result {
-  font-size: 1.2rem;
-  margin-bottom: 0.8rem;
-  min-height: 1.8rem;
-}
-
+#round-result,
 #final-message {
-  font-size: 1.5rem;
+  margin-top: 20px;
   font-weight: bold;
-  margin-top: 1rem;
-  color: #ffd700;
-  text-shadow: 0 0 5px black;
 }
 
 #restart-btn {
-  margin-top: 1.5rem;
-  background-color: var(--restart-bg);
+  margin-top: 20px;
+  padding: 10px 25px;
+  font-size: 1em;
+  background-color: #2196F3;
   color: white;
   border: none;
-  padding: 0.9rem 2rem;
-  border-radius: 30px;
-  font-size: 1.1rem;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 #restart-btn:hover {
-  background-color: var(--restart-hover);
-  transform: scale(1.05);
+  background-color: #1976D2;
 }
 
-canvas {
-  margin-top: 2rem;
-  background: var(--chart-bg);
-  border-radius: 10px;
-  padding: 1rem;
-}
-
-@media (max-width: 500px) {
-  .choice-btn {
-    width: 100%;
-    margin: 0.5rem 0;
-  }
+input[type="color"] {
+  border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 5px;
 }
