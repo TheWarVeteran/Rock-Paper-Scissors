@@ -1,137 +1,70 @@
 let playerScore = 0;
 let computerScore = 0;
-let round = 1;
 const maxRounds = 5;
+let roundsPlayed = 0;
 
-const roundResultText = document.getElementById("round-result");
-const finalMessage = document.getElementById("final-message");
-const playerScoreText = document.getElementById("player-score");
-const computerScoreText = document.getElementById("computer-score");
-const roundNumberText = document.getElementById("round-number");
+const resultDiv = document.getElementById("result");
+const finalResultDiv = document.getElementById("final-result");
+const playerScoreSpan = document.getElementById("player-score");
+const computerScoreSpan = document.getElementById("computer-score");
 
 const winSound = document.getElementById("win-sound");
 const loseSound = document.getElementById("lose-sound");
 const tieSound = document.getElementById("tie-sound");
 
-const chartCtx = document.getElementById("result-chart").getContext("2d");
-
-let chart = new Chart(chartCtx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [
-      {
-        label: 'Player Score',
-        data: [],
-        borderColor: '#4CAF50',
-        fill: false
-      },
-      {
-        label: 'Computer Score',
-        data: [],
-        borderColor: '#F44336',
-        fill: false
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: true }
-    },
-    scales: {
-      y: { beginAtZero: true }
-    }
-  }
+const darkToggle = document.getElementById("darkModeToggle");
+darkToggle.addEventListener("change", () => {
+  document.body.classList.toggle("dark-mode");
 });
 
 function play(playerChoice) {
-  if (round > maxRounds) return;
+  if (roundsPlayed >= maxRounds) return;
 
-  const choices = ['rock', 'paper', 'scissors'];
+  const choices = ["rock", "paper", "scissors"];
   const computerChoice = choices[Math.floor(Math.random() * 3)];
 
-  let resultText = "";
+  const outcome = getResult(playerChoice, computerChoice);
+  roundsPlayed++;
 
-  if (playerChoice === computerChoice) {
-    resultText = `It's a tie! Both chose ${playerChoice}.`;
-    tieSound.play();
-  } else if (
-    (playerChoice === 'rock' && computerChoice === 'scissors') ||
-    (playerChoice === 'paper' && computerChoice === 'rock') ||
-    (playerChoice === 'scissors' && computerChoice === 'paper')
-  ) {
+  if (outcome === "win") {
     playerScore++;
-    resultText = `You win! ${playerChoice} beats ${computerChoice}.`;
+    resultDiv.textContent = `You Win! ${playerChoice} beats ${computerChoice}`;
     winSound.play();
-  } else {
+  } else if (outcome === "lose") {
     computerScore++;
-    resultText = `You lose! ${computerChoice} beats ${playerChoice}.`;
+    resultDiv.textContent = `You Lose! ${computerChoice} beats ${playerChoice}`;
     loseSound.play();
+  } else {
+    resultDiv.textContent = `It's a Tie! You both chose ${playerChoice}`;
+    tieSound.play();
   }
 
-  playerScoreText.textContent = playerScore;
-  computerScoreText.textContent = computerScore;
-  roundNumberText.textContent = round;
-  roundResultText.textContent = resultText;
+  playerScoreSpan.textContent = playerScore;
+  computerScoreSpan.textContent = computerScore;
 
-  updateChart(round, playerScore, computerScore);
-  round++;
-
-  if (round > maxRounds) {
-    endGame();
+  if (roundsPlayed === maxRounds) {
+    declareWinner();
   }
 }
 
-function updateChart(roundNumber, player, computer) {
-  chart.data.labels.push(`Round ${roundNumber}`);
-  chart.data.datasets[0].data.push(player);
-  chart.data.datasets[1].data.push(computer);
-  chart.update();
+function getResult(player, computer) {
+  if (player === computer) return "tie";
+  if (
+    (player === "rock" && computer === "scissors") ||
+    (player === "scissors" && computer === "paper") ||
+    (player === "paper" && computer === "rock")
+  ) {
+    return "win";
+  }
+  return "lose";
 }
 
-function endGame() {
+function declareWinner() {
   if (playerScore > computerScore) {
-    finalMessage.textContent = "🎉 You are the overall winner!";
-  } else if (playerScore < computerScore) {
-    finalMessage.textContent = "💻 Computer wins the game!";
+    finalResultDiv.textContent = "🎉 You are the overall winner!";
+  } else if (computerScore > playerScore) {
+    finalResultDiv.textContent = "😢 Computer wins overall!";
   } else {
-    finalMessage.textContent = "🤝 It's a draw!";
+    finalResultDiv.textContent = "🤝 It's a draw overall!";
   }
 }
-
-function restartGame() {
-  playerScore = 0;
-  computerScore = 0;
-  round = 1;
-  playerScoreText.textContent = 0;
-  computerScoreText.textContent = 0;
-  roundNumberText.textContent = 1;
-  roundResultText.textContent = "Make your move!";
-  finalMessage.textContent = "";
-
-  chart.data.labels = [];
-  chart.data.datasets.forEach(ds => ds.data = []);
-  chart.update();
-}
-
-// Dark mode toggle + persistence
-const themeSwitch = document.getElementById("theme-switch");
-
-themeSwitch.addEventListener("change", () => {
-  if (themeSwitch.checked) {
-    document.body.classList.add("dark-mode");
-    localStorage.setItem("theme", "dark");
-  } else {
-    document.body.classList.remove("dark-mode");
-    localStorage.setItem("theme", "light");
-  }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-    themeSwitch.checked = true;
-  }
-});
