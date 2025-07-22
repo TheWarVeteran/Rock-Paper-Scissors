@@ -1,70 +1,132 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  transition: background-color 0.3s ease;
+const choices = ["rock", "paper", "scissors"];
+let playerScore = 0;
+let computerScore = 0;
+let round = 0;
+let totalRounds = 5;
+
+const playerScoreSpan = document.getElementById("player-score");
+const computerScoreSpan = document.getElementById("computer-score");
+const roundNumberSpan = document.getElementById("round-number");
+const resultDiv = document.getElementById("round-result");
+const finalMessageDiv = document.getElementById("final-message");
+const restartBtn = document.getElementById("restart-btn");
+const bgColorPicker = document.getElementById("bg-color");
+const roundsInput = document.getElementById("rounds");
+
+const winSound = document.getElementById("win-sound");
+const loseSound = document.getElementById("lose-sound");
+const tieSound = document.getElementById("tie-sound");
+
+function getComputerChoice() {
+  const randomIndex = Math.floor(Math.random() * choices.length);
+  return choices[randomIndex];
 }
 
-.round-selector {
-  padding: 20px;
-  background-color: #333;
-  color: white;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
+function playRound(playerChoice) {
+  if (round >= totalRounds) return;
+  const computerChoice = getComputerChoice();
+
+  let result = "";
+  if (playerChoice === computerChoice) {
+    result = "It's a tie!";
+    tieSound.play();
+  } else if (
+    (playerChoice === "rock" && computerChoice === "scissors") ||
+    (playerChoice === "paper" && computerChoice === "rock") ||
+    (playerChoice === "scissors" && computerChoice === "paper")
+  ) {
+    playerScore++;
+    result = `You win! ${playerChoice} beats ${computerChoice}`;
+    winSound.play();
+  } else {
+    computerScore++;
+    result = `You lose! ${computerChoice} beats ${playerChoice}`;
+    loseSound.play();
+  }
+
+  round++;
+  updateUI(result);
+
+  if (round >= totalRounds) {
+    endGame();
+  }
 }
 
-.scoreboard {
-  margin-top: 20px;
-  font-size: 1.2em;
+function updateUI(result) {
+  playerScoreSpan.textContent = playerScore;
+  computerScoreSpan.textContent = computerScore;
+  roundNumberSpan.textContent = round;
+  resultDiv.textContent = result;
 }
 
-.choices button {
-  padding: 15px 30px;
-  margin: 10px;
-  font-size: 1em;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s;
-  background-color: #4CAF50;
-  color: white;
+function endGame() {
+  let message = "";
+  if (playerScore > computerScore) message = "🎉 You won the game!";
+  else if (playerScore < computerScore) message = "😞 You lost the game!";
+  else message = "😐 The game is a tie!";
+
+  finalMessageDiv.textContent = message;
+  renderChart(playerScore, computerScore, totalRounds - playerScore - computerScore);
 }
 
-.choices button:hover {
-  transform: scale(1.05);
-  background-color: #45a049;
+function resetGame() {
+  playerScore = 0;
+  computerScore = 0;
+  round = 0;
+  totalRounds = parseInt(roundsInput.value) || 5;
+  updateUI("");
+  finalMessageDiv.textContent = "";
+  const chartCanvas = document.getElementById('scoreChart');
+  if (chartCanvas.chart) {
+    chartCanvas.chart.destroy();
+  }
 }
 
-#round-result,
-#final-message {
-  margin-top: 20px;
-  font-weight: bold;
+function renderChart(playerWins, computerWins, ties) {
+  const ctx = document.getElementById('scoreChart').getContext('2d');
+  if (window.scoreChart) window.scoreChart.destroy();
+
+  window.scoreChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Player Wins', 'Computer Wins', 'Ties'],
+      datasets: [{
+        label: 'Game Results',
+        data: [playerWins, computerWins, ties],
+        backgroundColor: ['#4CAF50', '#F44336', '#FFC107']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Final Game Statistics',
+          font: { size: 18 }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
 }
 
-#restart-btn {
-  margin-top: 20px;
-  padding: 10px 25px;
-  font-size: 1em;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
+document.querySelectorAll(".choices button").forEach((button) => {
+  button.addEventListener("click", () => playRound(button.dataset.choice));
+});
 
-#restart-btn:hover {
-  background-color: #1976D2;
-}
+restartBtn.addEventListener("click", resetGame);
 
-input[type="color"] {
-  border: none;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  border-radius: 5px;
-}
+bgColorPicker.addEventListener("input", (e) => {
+  document.body.style.backgroundColor = e.target.value;
+});
+
+roundsInput.addEventListener("change", () => {
+  totalRounds = parseInt(roundsInput.value) || 5;
+  resetGame();
+});
+
+// Initialize UI
+resetGame();

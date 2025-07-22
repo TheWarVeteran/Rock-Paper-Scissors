@@ -1,103 +1,84 @@
-let playerScore = 0;
-let computerScore = 0;
-let round = 0;
-let totalRounds = 5;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-const playerScoreDisplay = document.getElementById("player-score");
-const computerScoreDisplay = document.getElementById("computer-score");
-const roundResult = document.getElementById("round-result");
-const finalMessage = document.getElementById("final-message");
-const restartBtn = document.getElementById("restart-btn");
-const gameArea = document.getElementById("game-area");
-const startGameBtn = document.getElementById("start-game-btn");
-const roundsInput = document.getElementById("rounds-input");
-const bgColorPicker = document.getElementById("bg-color");
-
-const winSound = document.getElementById("win-sound");
-const loseSound = document.getElementById("lose-sound");
-const tieSound = document.getElementById("tie-sound");
-
-startGameBtn.addEventListener("click", () => {
-  totalRounds = parseInt(roundsInput.value);
-  if (isNaN(totalRounds) || totalRounds < 1) {
-    totalRounds = 5;
-  }
-  resetGame();
-  gameArea.style.display = "block";
-});
-
-bgColorPicker.addEventListener("input", (e) => {
-  document.body.style.backgroundColor = e.target.value;
-});
-
-function getComputerChoice() {
-  const choices = ["rock", "paper", "scissors"];
-  const randomIndex = Math.floor(Math.random() * choices.length);
-  return choices[randomIndex];
+body {
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  transition: background-color 0.3s ease;
 }
 
-function getResult(player, computer) {
-  if (player === computer) return "tie";
-  if (
-    (player === "rock" && computer === "scissors") ||
-    (player === "scissors" && computer === "paper") ||
-    (player === "paper" && computer === "rock")
-  ) {
-    return "win";
-  } else {
-    return "lose";
-  }
+.round-selector {
+  padding: 20px;
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-function playRound(playerChoice) {
-  const computerChoice = getComputerChoice();
-  const result = getResult(playerChoice, computerChoice);
-
-  if (result === "win") {
-    winSound.play();
-    playerScore++;
-  } else if (result === "lose") {
-    loseSound.play();
-    computerScore++;
-  } else {
-    tieSound.play();
-  }
-
-  round++;
-
-  playerScoreDisplay.textContent = playerScore;
-  computerScoreDisplay.textContent = computerScore;
-  roundResult.textContent = `You chose ${playerChoice}, Computer chose ${computerChoice}. You ${result}.`;
-
-  if (round >= totalRounds) {
-    endGame();
-  }
+h1 {
+  font-size: 2.5em;
+  margin-top: 30px;
+  color: #333;
 }
 
-function endGame() {
-  let message;
-  if (playerScore > computerScore) {
-    message = "🎉 You won the game!";
-  } else if (playerScore < computerScore) {
-    message = "💀 You lost the game.";
-  } else {
-    message = "🤝 It's a tie!";
-  }
-  finalMessage.textContent = message;
-  restartBtn.style.display = "inline-block";
+.scoreboard {
+  margin-top: 20px;
+  font-size: 1.2em;
 }
 
-function resetGame() {
-  playerScore = 0;
-  computerScore = 0;
-  round = 0;
-  playerScoreDisplay.textContent = 0;
-  computerScoreDisplay.textContent = 0;
-  roundResult.textContent = "";
-  finalMessage.textContent = "";
-  restartBtn.style.display = "none";
+.choices button {
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 1em;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+  background-color: #4CAF50;
+  color: white;
 }
 
-function restartGame() {
-  resetGame();
+.choices button:hover {
+  transform: scale(1.05);
+  background-color: #45a049;
+}
+
+#round-result,
+#final-message {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+#restart-btn {
+  margin-top: 20px;
+  padding: 10px 25px;
+  font-size: 1em;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#restart-btn:hover {
+  background-color: #1976D2;
+}
+
+input[type="color"] {
+  border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+canvas#scoreChart {
+  max-width: 600px;
+  margin: 40px auto;
+  display: block;
 }
